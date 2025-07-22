@@ -13,9 +13,10 @@ xb = np.random.random((nb, d)).astype('float32')
 xb[:, 0] += np.arange(nb) / 1000.
 xq = np.random.random((nq, d)).astype('float32')
 xq[:, 0] += np.arange(nq) / 1000.
+num_threads = 4                  # number of threads for parallel search
 
 import faiss                        # make faiss available
-index = faiss.IndexSVS(d, num_threads)           # build the index
+index = faiss.IndexSVS(d)           # build the index
 
 # index = faiss.IndexSVSLVQ4x4(d)   # build the SVSLVQ4x4 index
 # index = faiss.IndexSVSLVQ4x8(d)   # build the SVSLVQ4x4 index
