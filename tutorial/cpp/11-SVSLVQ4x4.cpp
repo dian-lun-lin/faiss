@@ -10,7 +10,7 @@
 #include <cstdlib>
 #include <random>
 
-#include <faiss/IndexSVS.h>
+#include <faiss/IndexSVSLVQ4x4.h>
 
 using idx_t = faiss::idx_t;
 
@@ -39,14 +39,14 @@ int main() {
 
     int k = 4;
 
-    faiss::IndexSVS index(d);
+    faiss::IndexSVSLVQ4x4 index(d);
     index.add(nb, xb);
 
     { // search xq
         idx_t* I = new idx_t[k * nq];
         float* D = new float[k * nq];
 
-        index.search(nq, xb, k, D, I);
+        index.search(nq, xq, k, D, I);
 
         printf("I=\n");
         for (int i = nq - 5; i < nq; i++) {
@@ -71,3 +71,4 @@ int main() {
 
     return 0;
 }
+

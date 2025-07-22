@@ -18,16 +18,17 @@
 
 namespace faiss {
 
-struct IndexSVSUncompressed : Index {
+struct IndexSVS : Index {
 
-  IndexSVSUncompressed(
+  IndexSVS(
       idx_t d, 
       MetricType metric = METRIC_L2,
-      idx_t num_threads = 32,
-      idx_t graph_max_degree = 64
+      size_t num_threads = 1,
+      size_t graph_max_degree = 64
   );
+  // rn OMP_NUM_THREADS
 
-  ~IndexSVSUncompressed() override;
+  ~IndexSVS() override;
 
   void add(idx_t n, const float* x) override;
 
@@ -41,27 +42,20 @@ struct IndexSVSUncompressed : Index {
 
   void reset();
 
-  private:
+  virtual void init_impl(idx_t n, const float* x);
 
-    void init_impl(idx_t n, const float* x, const std::vector<size_t>& labels);
+  svs::DynamicVamana* impl{nullptr};
 
-    // sequential labels
-    size_t nlabels{0};
-
-    std::unique_ptr<svs::DynamicVamana> impl;
-
-
-    size_t num_threads;
-    // default parameters
-    // can be tuned by providing APIs
-    idx_t graph_max_degree = 64;
-    float alpha = 1.2;
-    idx_t search_window_size = 10;
-    idx_t search_buffer_capacity = 10;
-    idx_t construction_window_size = 40;
-    idx_t max_candidate_pool_size = 200;
-    idx_t prune_to = 60;
-    bool use_full_search_history = true;
+  size_t num_threads;
+  size_t graph_max_degree;
+  // default parameters
+  float alpha = 1.2;
+  size_t search_window_size = 10;
+  size_t search_buffer_capacity = 10;
+  size_t construction_window_size = 40;
+  size_t max_candidate_pool_size = 200;
+  size_t prune_to = 60;
+  bool use_full_search_history = true;
 };
 
 } // namespace faiss
